@@ -21,7 +21,7 @@ class ViewController: UIViewController{
     @IBAction func notePressed(_ sender: UIButton) {
         print(sender.tag)
         //playSound1()
-        playSound2()
+        playSound2(String(sender.tag))
     }
     
     func playSound1(){
@@ -41,8 +41,11 @@ class ViewController: UIViewController{
         }
     }
     
-    func playSound2(){
-        if let soundURL = Bundle.main.url(forResource: "note2", withExtension: "wav") {
+    func playSound2(_ notePlayed : String){
+        
+        let note = "note" + notePlayed
+        
+        if let soundURL = Bundle.main.url(forResource: note , withExtension: "wav") {
             var mySound: SystemSoundID = 0
             AudioServicesCreateSystemSoundID(soundURL as CFURL, &mySound)
             // Play
