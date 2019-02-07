@@ -7,50 +7,31 @@
 //
 
 import UIKit
-import AVFoundation //playSound1 method
-import AudioToolbox //playSound2 method
+import AVFoundation
 
-class ViewController: UIViewController{
+class ViewController: UIViewController, AVAudioPlayerDelegate{
     
-    var player: AVAudioPlayer? //used for playSound1 method
+    var audioPlayer: AVAudioPlayer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
     }
 
     @IBAction func notePressed(_ sender: UIButton) {
-        print(sender.tag)
-        //playSound1()
-        playSound2(String(sender.tag))
+        playSound(String(sender.tag))
     }
     
-    func playSound1(){
-        guard let url = Bundle.main.url(forResource: "note1", withExtension: "wav") else { return }
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-
-            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.wav.rawValue)
-
-            guard let player = player else { return }
-
-            player.play()
-
-        } catch let error {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func playSound2(_ notePlayed : String){
+    func playSound(_ notePlayed : String){
         
         let note = "note" + notePlayed
         
-        if let soundURL = Bundle.main.url(forResource: note , withExtension: "wav") {
-            var mySound: SystemSoundID = 0
-            AudioServicesCreateSystemSoundID(soundURL as CFURL, &mySound)
-            // Play
-            AudioServicesPlaySystemSound(mySound);
+        let soundURL = Bundle.main.url(forResource: note , withExtension: "wav")
+        do{
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL!)
+        } catch {
+            print(error)
         }
+        audioPlayer.play()
     }
   
 
